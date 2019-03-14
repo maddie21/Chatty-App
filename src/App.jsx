@@ -8,35 +8,37 @@ class App extends Component {
   // Set initial state so the component is initially "loading"
   constructor(props) {
     super(props);
+    this.socket = null;
     this.state = {
       currentUser: null,
-      messages: [{
-        id: 1, 
-        username: "Maddie",
-        content: "This is a test"
-      },{
-        id: 2,
-        username: "Maddie",
-        content: "This is another test"
-      }]
+      messages: []
     }
     this.saveNewMessage = this.saveNewMessage.bind(this);
     this.saveNewUsername = this.saveNewUsername.bind(this);
   }
 
-  saveNewMessage(message) {
-    if(message) {
-      const { messages, currentUser } = this.state;
-      const lastMessage = messages[messages.length - 1];
-      messages.push({
-        id: lastMessage.id + 1,
-        username: currentUser,
-        content: message
-      });
-      this.setState({messages: messages});
+  componentDidMount() {
+    this.socket = new WebSocket("ws://localhost:3001");
+    this.socket.onopen = () => {
+      console.log('Connected to server');
     }
   }
 
+  // function for the user to save a new message 
+  saveNewMessage(message) {
+    if(message) {
+      const { messages, currentUser } = this.state;
+      const newMessage = {
+        username: currentUser,
+        content: message
+      };
+      messages.push(newMessage);
+      this.setState({messages: messages});
+      this.socket.send(JSON.stringify(newMessage));
+    }
+  }
+
+  // function to save a new user name 
   saveNewUsername(username) {
     if(username) {
       this.setState({currentUser: username});
