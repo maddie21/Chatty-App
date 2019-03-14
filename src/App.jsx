@@ -22,18 +22,22 @@ class App extends Component {
     this.socket.onopen = () => {
       console.log('Connected to server');
     }
+    this.socket.onmessage = (event) => {
+      const message = JSON.parse(event.data);
+      const currentMessages = this.state.messages;
+      currentMessages.push(message);
+      this.setState({messages: currentMessages})
+    }
   }
 
   // function for the user to save a new message 
   saveNewMessage(message) {
     if(message) {
-      const { messages, currentUser } = this.state;
+      const { currentUser } = this.state;
       const newMessage = {
         username: currentUser,
         content: message
       };
-      messages.push(newMessage);
-      this.setState({messages: messages});
       this.socket.send(JSON.stringify(newMessage));
     }
   }
