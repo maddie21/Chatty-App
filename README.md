@@ -1,9 +1,10 @@
-React Boilerplate
-=====================
+### Chatty App Project 
 
-A minimal and light dev environment for ReactJS.
+=============================
 
-### Usage
+Chatty will allow users to communicate with each other without having to register accounts. It uses React, a popular front-end library created and used heavily by Facebook as well as modern tools for Node including Webpack and Babel.
+
+### Gettin Started
 
 Clone the boilerplate and create your own git repo.
 
@@ -23,19 +24,17 @@ npm start
 open http://localhost:3000
 ```
 
-### Static Files
+### Final Product 
 
-You can store static files like images, fonts, etc in the `build` folder.
+!["Screenshot of Final Chatty App"]()
 
-For example, if you copy a file called my_image.png into the build folder you can access it using `http://localhost:3000/build/my_image.png`.
+- When any connected user sends a chat message, all     connected users receive and display the message
+- When any connected user changes their name, all       connected users are notified of the name change
+    - Notifications are styled differently from chat messages
+- Header will display the count of connected users
+- When the number of connected users changes, this      count will be updated for all connected users
 
-### Linting
 
-This boilerplate project includes React ESLint configuration.
-
-```
-npm run lint
-```
 
 ### Dependencies
 
