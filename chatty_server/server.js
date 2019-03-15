@@ -21,20 +21,56 @@ const wss = new SocketServer({ server });
 // the ws parameter in the callback.
 wss.on('connection', (ws) => {
   console.log('Client connected');
+  
+  const totalActiveUsers = wss.clients.size;
+  const activeUsersBroadcast = {
+    type: 'activeUsers',
+    content: totalActiveUsers
+  }
+  wss.clients.forEach(function each(client) {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(JSON.stringify(activeUsersBroadcast));
+    }
+  });
 
-  ws.on('message', function incoming(message) {
-    const { username, content } = JSON.parse(message);
-    const messageId = uuidv4();
-    const newMessage = {
-        id: messageId,
-        username: username, 
-        content: content
+  ws.on('close', () => {
+    const totalActiveUsers = wss.clients.size;
+    const activeUsersBroadcast = {
+      type: 'activeUsers',
+      content: totalActiveUsers
     }
     wss.clients.forEach(function each(client) {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(JSON.stringify(activeUsersBroadcast));
+      }
+    });
+  });
+
+  ws.on('message', function incoming(message) {
+    const { type, username, content } = JSON.parse(message);
+    let broadcastMessage = {};
+    if(type === 'newMessage') {
+      const messageId = uuidv4();
+      broadcastMessage = {
+        id: messageId,
+        type: "message",
+        username: username, 
+        content: content
+      }
+    } else if(type === 'newNotification') {
+      const messageId = uuidv4();
+      broadcastMessage = {
+        id: messageId,
+        type: "notification",
+        content: content
+      }
+    }
+    
+    wss.clients.forEach(function each(client) {
         if (client.readyState === WebSocket.OPEN) {
-          client.send(JSON.stringify(newMessage));
+          client.send(JSON.stringify(broadcastMessage));
         }
-      });
+    });
   });
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
   ws.on('close', () => console.log('Client disconnected'));
