@@ -13,12 +13,18 @@ export default class Message extends Component {
 
   render() {
       const { message } = this.props;
+      const { type, username, content } = message;
     return (
-        <div className={"message"}>
-            <span className={"message-username"}>{message.username}</span>
+      <div>
+        {type == 'message' && <div className={"message"}>
+            <span className={"message-username"}>{username}</span>
             <span className={"message-content"}>
-            {message.content}</span>
-        </div>
+            {content}</span>
+        </div>}
+        {type == 'notification' && <div className={"message system"}>
+          {content}
+        </div>}
+      </div>
     );
   }
 }

@@ -11,7 +11,8 @@ class App extends Component {
     this.socket = null;
     this.state = {
       currentUser: null,
-      messages: []
+      messages: [],
+      activeUsers: 1
     }
     this.saveNewMessage = this.saveNewMessage.bind(this);
     this.saveNewUsername = this.saveNewUsername.bind(this);
@@ -24,9 +25,16 @@ class App extends Component {
     }
     this.socket.onmessage = (event) => {
       const message = JSON.parse(event.data);
-      const currentMessages = this.state.messages;
-      currentMessages.push(message);
-      this.setState({messages: currentMessages})
+      const { type, content } = message;
+      switch(type) {
+        case 'message':
+        case 'notification':
+          const currentMessages = this.state.messages;
+          currentMessages.push(message);
+          this.setState({messages: currentMessages})
+        case 'activeUsers':
+          this.setState({activeUsers: content})
+      }
     }
   }
 
@@ -35,6 +43,7 @@ class App extends Component {
     if(message) {
       const { currentUser } = this.state;
       const newMessage = {
+        type: "newMessage",
         username: currentUser,
         content: message
       };
@@ -44,17 +53,24 @@ class App extends Component {
 
   // function to save a new user name 
   saveNewUsername(username) {
-    if(username) {
+    const { currentUser } = this.state;
+    if(username && username !== currentUser) {
+      const serverNotification = {
+        type: "newNotification",
+        content: `${currentUser} changed their name to ${username}`
+      }
       this.setState({currentUser: username});
+      this.socket.send(JSON.stringify(serverNotification));
     }
   }
 
   render() {
-    const { currentUser, messages } = this.state;
+    const { currentUser, messages, activeUsers } = this.state;
     return (
       <div>
         <nav className={"navbar"}>
           <a href="/" className={"navbar-brand"}>Chatty</a>
+          <p className={"active-users"}>{activeUsers} users online</p>
         </nav>
         <ChatBar onNewUsername={this.saveNewUsername} onNewMessage={this.saveNewMessage} currentUser={currentUser}/>
         <MessageList messages={messages} />
