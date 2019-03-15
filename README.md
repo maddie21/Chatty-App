@@ -1,4 +1,4 @@
-### Chatty App Project 
+# Chatty App Project 
 
 =============================
 
@@ -26,7 +26,7 @@ open http://localhost:3000
 
 ### Final Product 
 
-!["Screenshot of Final Chatty App"]()
+!["Screenshot of Final Chatty App"](https://github.com/maddie21/Chatty-App/blob/master/docs/chattyapp.png?raw=true)
 
 - When any connected user sends a chat message, all     connected users receive and display the message
 - When any connected user changes their name, all       connected users are notified of the name change
