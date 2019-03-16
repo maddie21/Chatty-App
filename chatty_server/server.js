@@ -20,6 +20,7 @@ const wss = new SocketServer({ server });
 // When a client connects they are assigned a socket, represented by
 // the ws parameter in the callback.
 
+// broadcasting active users that are online (websocket connection open/connected)
 wss.on('connection', (ws) => {
   console.log('Client connected');
   
@@ -34,6 +35,8 @@ wss.on('connection', (ws) => {
     }
   });
 
+
+//user with no websocket connection (users offline)
   ws.on('close', () => {
     const totalActiveUsers = wss.clients.size;
     const activeUsersBroadcast = {
@@ -47,6 +50,7 @@ wss.on('connection', (ws) => {
     });
   });
 
+  // sending messages and notifications (also when the username is switched)
   ws.on('message', function incoming(message) {
     const { type, username, content } = JSON.parse(message);
     let broadcastMessage = {};

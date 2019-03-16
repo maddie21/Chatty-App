@@ -38,7 +38,7 @@ class App extends Component {
     }
   }
 
-  // function for the user to save a new message 
+  // function for the user to enter a new message 
   saveNewMessage(message) {
     if(message) {
       const { currentUser } = this.state;
@@ -51,7 +51,7 @@ class App extends Component {
     }
   }
 
-  // function to save a new user name 
+  // function to send messages. If user is not the current user, notifications are sent when the username is switched
   saveNewUsername(username) {
     const { currentUser } = this.state;
     if(username && username !== currentUser) {
