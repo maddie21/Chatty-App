@@ -10,7 +10,7 @@ class App extends Component {
     super(props);
     this.socket = null;
     this.state = {
-      currentUser: null,
+      currentUser: 'Anonymous',
       messages: [],
       activeUsers: 1
     }
@@ -32,8 +32,12 @@ class App extends Component {
           const currentMessages = this.state.messages;
           currentMessages.push(message);
           this.setState({messages: currentMessages})
+          break;
         case 'activeUsers':
-          this.setState({activeUsers: content})
+          this.setState({activeUsers: content});
+          break;
+        default:
+          break;
       }
     }
   }
