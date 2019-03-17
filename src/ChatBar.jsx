@@ -7,8 +7,9 @@ export default class ChatBar extends Component {
     this.saveNewUsername = this.saveNewUsername.bind(this);
   }
 
-  // function to save a new message upon clicking enter
+
   saveNewMessage(e) {
+    // e is the argument - type: DOM Event
     const { onNewMessage } = this.props;
     if(e.key === 'Enter') {
         onNewMessage(e.target.value)
@@ -16,7 +17,7 @@ export default class ChatBar extends Component {
     }
   }
 
-  // function to save a new username upon clicking enter 
+
   saveNewUsername(e) {
     const { onNewUsername } = this.props;
     if(e.key === 'Enter') {
